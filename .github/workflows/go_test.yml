@@ -1,0 +1,10 @@
+name: "go tests"
+on: push
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - run: go mod tidy
+      - run: go mod vendor
+      - run: go test
