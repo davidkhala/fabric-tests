@@ -19,14 +19,14 @@ import (
 var logger = logrus.New()
 
 // peer0.icdd
-var peer0_icdd = golang.Node{
+var peer0Icdd = golang.Node{
 	Addr:                  "localhost:8051",
 	TLSCARoot:             "/home/davidliu/delphi-fabric/config/ca-crypto-config/peerOrganizations/icdd/tlsca/tlsca.icdd-cert.pem",
 	SslTargetNameOverride: "peer0.icdd",
 }
 
 // peer0.astri.org
-var peer0_astri = golang.Node{
+var peer0Astri = golang.Node{
 
 	Addr:      "localhost:7051",
 	TLSCARoot: "/home/davidliu/delphi-fabric/config/ca-crypto-config/peerOrganizations/astri.org/peers/peer0.astri.org/tls/ca.crt",
@@ -61,7 +61,7 @@ func cryptoRebuild(crypto golang.Crypto) basic.CryptoImpl {
 
 var config = basic.Config{
 	//peer0_icdd
-	Endorsers:  []basic.Node{nodeRebuild(peer0_icdd)},
+	Endorsers:  []basic.Node{nodeRebuild(peer0Icdd)},
 	Committers: nil,
 	Orderer:    nodeRebuild(orderer0),
 	Channel:    "allchannel",
@@ -76,9 +76,9 @@ var cryptoConfig = golang.CryptoConfig{
 }
 
 func TestPing(t *testing.T) {
-	_, err := basic.DialConnection(nodeRebuild(peer0_icdd), logger)
+	_, err := basic.DialConnection(nodeRebuild(peer0Icdd), logger)
 	goutils.PanicError(err)
-	_, err = basic.DialConnection(nodeRebuild(peer0_astri), logger)
+	_, err = basic.DialConnection(nodeRebuild(peer0Astri), logger)
 	goutils.PanicError(err)
 	_, err = basic.DialConnection(nodeRebuild(orderer0), logger)
 	goutils.PanicError(err)
@@ -118,9 +118,9 @@ func TestE2E(t *testing.T) {
 	goutils.PanicError(err)
 	// server side
 	// peer0.icdd
-	peer0, err = peer0_icdd.AsGRPCClient()
+	peer0, err = peer0Icdd.AsGRPCClient()
 	goutils.PanicError(err)
-	peer1, err = peer0_astri.AsGRPCClient()
+	peer1, err = peer0Astri.AsGRPCClient()
 	endorser = golang.EndorserFrom(peer0)
 	goutils.PanicError(err)
 
@@ -136,7 +136,7 @@ func TestE2E(t *testing.T) {
 
 	proposalResponses = []*peer.ProposalResponse{proposalResponse}
 	// server side end
-	transaction, err = tapeEngine.CreateSignedTx(proposal, &tapeSigner, proposalResponses)
+	transaction, err = tapeEngine.CreateSignedTx(signed, &tapeSigner, proposalResponses)
 	goutils.PanicError(err)
 	// server side
 	ordererGrpc, err = orderer0.AsGRPCClient()
