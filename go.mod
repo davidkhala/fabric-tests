@@ -1,8 +1,6 @@
 module github.com/davidkhala/fabric-tests
 
-go 1.21
-
-toolchain go1.21.3
+go 1.20
 
 require (
 	github.com/davidkhala/fabric-common/golang v0.0.0-20231221233639-b354f14c02bf
